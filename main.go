@@ -1,25 +1,23 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"os"
+	"log"
+	"pjsw/commands"
+	"pjsw/db"
 	"pjsw/util"
 )
 
 func main() {
-	arg, err := util.GetArg()
+	db.InitDatabase()
+
+	args, err := util.GetArgs()
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
 	}
-
-	fmt.Println(arg)
-
-	flag.String("greeting", "Hello", "Custom greeting message")
-
-	// Parse flags; flag package only parses after the main command
-	flag.CommandLine.Parse(os.Args[2:])
-
-	fmt.Println(flag.Args())
+	db, err := db.CreateDatabase()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	commands.Exec(args, db)
 }
