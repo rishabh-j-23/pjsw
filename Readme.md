@@ -19,7 +19,6 @@ go build -o pjsw
 
 ```
 
-
 ## 🛠️ Usage
 
 ### 1. Show Help
@@ -46,7 +45,15 @@ pjsw add <name> <path>
 
 Adds a project name and path to the database. Use `.` for the current directory.
 
-### 4. List All Projects
+### 4. Remove Project
+
+```bash
+pjsw rm <name>
+```
+
+Removes project from the database.
+
+### 5. List All Projects
 
 ```bash
 pjsw getall

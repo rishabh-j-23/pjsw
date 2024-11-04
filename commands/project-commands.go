@@ -55,3 +55,12 @@ func GetAllProjects(db *db.Projects) {
 		fmt.Fprintf(writer, "%s\t   %s\n", k, v)
 	}
 }
+
+func DeleteProjectByName(name string, db *db.Projects) {
+	delPath, err := db.DeleteProjectByName(name)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	fmt.Printf("'%s' removed successfully", delPath)
+}

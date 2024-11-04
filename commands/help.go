@@ -21,7 +21,8 @@ func PrintHelp() {
 	CmdDetails([]string{"help"}, "Prints this message")
 	CmdDetails([]string{"sw", "name"}, "switch(copies) dir of projects to clipboard. Command copied in clipboard is in format cd <projectpath>")
 	CmdDetails([]string{"add", "name", "path"}, "adds project name and path to database. Use unique project name to avoid errors. Use '.' to refer to current working directory")
-	CmdDetails([]string{"getall"}, "Prints all added projects name and path")
+	CmdDetails([]string{"getall | all"}, "Prints all added projects name and path")
+	CmdDetails([]string{"rm | remove | delete", "name"}, "Deletes path for added project. need to pass project 'name'")
 }
 
 func CmdDetails(cmds []string, cmdDescription string) {

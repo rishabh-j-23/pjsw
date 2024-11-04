@@ -16,11 +16,12 @@ func Exec(args []string, db *db.Projects) {
 			os.Exit(1)
 		}
 		addProject(args[2], args[3], db)
-	case "getall":
+	case "getall", "all":
 		GetAllProjects(db)
 	case "help":
 		PrintHelp()
-
+	case "rm", "remove", "delete":
+		DeleteProjectByName(args[2], db)
 	default:
 		fmt.Println("Command does not exists. use 'pjsw help' for more detail")
 	}
