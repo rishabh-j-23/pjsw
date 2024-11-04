@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"pjsw/commands"
 	"pjsw/db"
@@ -13,7 +12,7 @@ func main() {
 
 	args, err := util.GetArgs()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 	}
 	db, err := db.CreateDatabase()
 	if err != nil {
