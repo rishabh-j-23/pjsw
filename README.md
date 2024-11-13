@@ -19,6 +19,19 @@ go build -o pjsw
 
 ```
 
+For linux user
+```bash
+git clone https://github.com/rishabh-j-23/pjsw.git
+cd pjsw
+go build -o pjsw
+mv pjsw /opt/pjsw/
+chmod 755 /opt/pjsw
+```
+in ~/.bashrc file append following at end
+```bash
+export PATH=$PATH:/opt/pjsw/
+```
+
 ## 🛠️ Usage
 
 ### 1. Show Help
