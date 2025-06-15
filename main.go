@@ -8,15 +8,12 @@ import (
 )
 
 func main() {
-	db.InitDatabase()
+	projects := db.InitDatabase()
 
 	args, err := util.GetArgs()
 	if err != nil {
 		log.Fatalln(err)
 	}
-	db, err := db.CreateDatabase()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	commands.Exec(args, db)
+
+	commands.Exec(args, projects)
 }

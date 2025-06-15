@@ -22,6 +22,13 @@ func Exec(args []string, db *db.Projects) {
 		PrintHelp()
 	case "rm", "remove", "delete":
 		DeleteProjectByName(args[2], db)
+	case "project":
+		projectPath, err := FzfSelectProject(db)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		fmt.Println(projectPath)
 	default:
 		fmt.Println("Command does not exists. use 'pjsw help' for more detail")
 	}

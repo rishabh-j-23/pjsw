@@ -18,13 +18,16 @@ func CreateDatabase() (*Projects, error) {
 
 	_, err = os.Stat(projectDir)
 	if err != nil {
-		err = os.Mkdir(projectDir, fs.ModeType)
+		err = os.Mkdir(projectDir, fs.ModePerm)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	dbFile := path.Join(projectDir, dbFileName)
+
+	// give db file read and write permissions
+	os.Chmod(dbFile, 0666)
 
 	db, err := sql.Open("sqlite3", dbFile)
 	if err != nil {
@@ -33,11 +36,13 @@ func CreateDatabase() (*Projects, error) {
 	return &Projects{db}, err
 }
 
-func InitDatabase() {
+func InitDatabase() *Projects {
 	project, err := CreateDatabase()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	project.CreateTable()
+
+	return project
 }

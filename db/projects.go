@@ -19,6 +19,7 @@ func (project *Projects) CreateTable() (sql.Result, error) {
         );`
 
 	result, err := project.db.Exec(createDb)
+
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +71,7 @@ func (project *Projects) DeleteProjectByName(name string) (string, error) {
 }
 
 func (p *Projects) GetAll() (map[string]string, error) {
-	query := "SELECT * FROM " + projectTable + ";"
+	query := `SELECT projectName, projectPath FROM projects`
 
 	rows, err := p.db.Query(query)
 	if err != nil {

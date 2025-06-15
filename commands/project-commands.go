@@ -1,13 +1,14 @@
 package commands
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"pjsw/db"
+	"strings"
 	"text/tabwriter"
-
-	"golang.design/x/clipboard"
 )
 
 func switchProject(projectName string, db *db.Projects) {
@@ -16,10 +17,7 @@ func switchProject(projectName string, db *db.Projects) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	cdCommand := fmt.Sprintf("cd %s", path)
-	clipboard.Write(clipboard.FmtText, []byte(cdCommand))
-	fmt.Printf("'%s' copied to clipboard.\n", cdCommand)
-	fmt.Println("Paste the command to switch directory")
+	fmt.Println(path)
 }
 
 func addProject(name string, path string, db *db.Projects) {
@@ -63,4 +61,44 @@ func DeleteProjectByName(name string, db *db.Projects) {
 	}
 
 	fmt.Printf("'%s' removed successfully", delPath)
+}
+
+// FzfSelect retrieves all project keys from the database, pipes them to fzf for selection,
+// and returns the selected project key.
+func FzfSelectProject(db *db.Projects) (string, error) {
+	// Retrieve all project data
+	data, err := db.GetAll()
+	if err != nil {
+		return "", err
+	}
+
+	// Format data as newline-separated keys (assuming data is a slice of structs with a Key field)
+	var keyBuffer bytes.Buffer
+	for name := range data {
+		// Assuming project has a Key field; adjust based on actual struct
+		keyBuffer.WriteString(name + "\n")
+	}
+
+	// Set up fzf command
+	cmd := exec.Command("fzf", "--no-sort", "--reverse", "--height=50%")
+	cmd.Stdin = bytes.NewReader(keyBuffer.Bytes())
+	cmd.Stderr = os.Stderr // Forward fzf errors to terminal
+
+	// Run fzf and capture output
+	output, err := cmd.Output()
+	if err != nil {
+		// Handle case where user exits fzf without selecting (e.g., Ctrl+C)
+		if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 130 {
+			return "", fmt.Errorf("no project selected")
+		}
+		return "", fmt.Errorf("fzf error: %w", err)
+	}
+
+	// Parse and trim the selected project key
+	selectedProject := strings.TrimSpace(string(output))
+	if selectedProject == "" {
+		return "", fmt.Errorf("no project selected")
+	}
+
+	return data[selectedProject], nil
 }
