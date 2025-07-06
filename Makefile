@@ -18,6 +18,10 @@ run:
 	go run main.go
 
 install:
+	@echo "[INFO] Checking fzf"
+	@make check-fzf
+	@echo "[INFO] Fetching dependencies"
+	@go mod tidy
 	@echo "[INFO] installing pjsw"
 	@go install pjsw
 	@echo "[INFO] pjsw installed"
