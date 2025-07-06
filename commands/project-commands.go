@@ -64,7 +64,7 @@ func DeleteProjectByName(name string, db *db.Projects) {
 }
 
 // FzfSelect retrieves all project keys from the database, pipes them to fzf for selection,
-// and returns the selected project key.
+// and returns the selected project path.
 func FzfSelectProject(db *db.Projects) (string, error) {
 	// Retrieve all project data
 	data, err := db.GetAll()
@@ -75,7 +75,6 @@ func FzfSelectProject(db *db.Projects) (string, error) {
 	// Format data as newline-separated keys (assuming data is a slice of structs with a Key field)
 	var keyBuffer bytes.Buffer
 	for name := range data {
-		// Assuming project has a Key field; adjust based on actual struct
 		keyBuffer.WriteString(name + "\n")
 	}
 

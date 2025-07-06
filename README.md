@@ -34,6 +34,23 @@ export PATH=$PATH:/opt/pjsw/
 
 ## 🛠️ Usage
 
+### 0. Bash Integration (Optional)
+
+To enable direct project switching from your terminal, add the following to your `~/.bashrc` or `~/.zshrc` file:
+
+```bash
+source ~/.pjsw/pjsw-switch.sh
+```
+
+After adding this, you can use the `pjsw-project` command:
+
+```bash
+pjsw-project
+```
+
+This command will launch a menu with all the projects you have added, allowing you to switch between them.
+
+
 ### 1. Show Help
 
 ```bash
