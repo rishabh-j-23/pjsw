@@ -7,9 +7,39 @@ import (
 	"os"
 	"os/exec"
 	"pjsw/db"
+	"runtime"
 	"strings"
 	"text/tabwriter"
 )
+
+func SpawnShell(path string) {
+	// Try to get the shell from environment variable
+	shell := os.Getenv("SHELL")
+	
+	var cmd *exec.Cmd
+	
+	// If SHELL is not set, use platform defaults
+	if shell == "" {
+		if runtime.GOOS == "windows" {
+			// Use PowerShell with -NoLogo to suppress startup banner
+			cmd = exec.Command("powershell", "-NoLogo")
+		} else {
+			cmd = exec.Command("/bin/bash")
+		}
+	} else {
+		cmd = exec.Command(shell)
+	}
+
+	cmd.Dir = path
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("Error spawning shell:", err)
+	}
+}
 
 func switchProject(projectName string, db *db.Projects) {
 	path, err := db.GetPathByProject(projectName)
@@ -17,7 +47,7 @@ func switchProject(projectName string, db *db.Projects) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println(path)
+	SpawnShell(path)
 }
 
 func addProject(name string, path string, db *db.Projects) {
