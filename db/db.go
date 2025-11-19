@@ -43,6 +43,7 @@ func InitDatabase() *Projects {
 	}
 
 	project.CreateTable()
+	project.CreateSSHTable()
 
 	return project
 }

@@ -29,6 +29,14 @@ func Exec(args []string, db *db.Projects) {
 			os.Exit(1)
 		}
 		fmt.Println(projectPath)
+	case "ssh":
+		if len(args) > 2 {
+			ConnectSSH(args[2], db)
+		} else {
+			InteractiveSelectSSH(db)
+		}
+	case "add-ssh":
+		AddSSH(args[2:], db)
 	default:
 		fmt.Println("Command does not exists. use 'pjsw help' for more detail")
 	}

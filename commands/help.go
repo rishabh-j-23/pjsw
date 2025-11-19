@@ -23,6 +23,8 @@ func PrintHelp() {
 	CmdDetails([]string{"add", "name", "path"}, "adds project name and path to database. Use unique project name to avoid errors. Use '.' to refer to current working directory")
 	CmdDetails([]string{"getall | all"}, "Prints all added projects name and path")
 	CmdDetails([]string{"rm | remove | delete", "name"}, "Deletes path for added project. need to pass project 'name'")
+	CmdDetails([]string{"ssh", "[name]"}, "Connect to SSH server. If name is omitted, opens interactive selection.")
+	CmdDetails([]string{"add-ssh", "name", "user@host", "[-p port]", "[-i identity_file]"}, "Adds an SSH connection.")
 }
 
 func CmdDetails(cmds []string, cmdDescription string) {
