@@ -28,7 +28,7 @@ func Exec(args []string, db *db.Projects) {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		SpawnShell(projectPath)
+		fmt.Println(projectPath)
 	case "ssh":
 		if len(args) > 2 {
 			ConnectSSH(args[2], db)
