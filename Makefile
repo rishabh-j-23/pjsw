@@ -1,31 +1,44 @@
-all: build install
+# Detect OS
+UNAME_S := $(shell uname -s 2>/dev/null || echo Windows)
 
-check-fzf:
-	@command -v fzf >/dev/null 2>&1 || { echo >&2 "fzf is required but not installed. Please install it and try again."; exit 1; }
+.PHONY: all install build clean help
 
-build:
-	@echo "[INFO] Checking fzf"
-	@make check-fzf
-	@echo "[INFO] Fetching dependencies"
-	@go mod tidy
-	@echo "[INFO] Building pjsw"
-	@go build -o pjsw main.go
-	@echo "[INFO] Copying pjsw-switch.sh to ~/.pjsw"
-	@cp ./scripts/pjsw-switch.sh $(HOME)/.pjsw
-	@echo "[INFO] pjsw built"
-
-run:
-	go run main.go
+all: install
 
 install:
-	@echo "[INFO] Checking fzf"
-	@make check-fzf
-	@echo "[INFO] Fetching dependencies"
-	@go mod tidy
-	@echo "[INFO] installing pjsw"
-	@go install pjsw
-	@echo "[INFO] pjsw installed"
-	@echo "--------------------------------ACTION REQUIRED----------------------------------"
-	@echo "[WARN] add 'source ~/.pjsw/pjsw-switch.sh' to the rc file"
-	@echo "[INFO] restart your terminal to apply the changes"
-	@echo "---------------------------------------------------------------------------------"
+ifeq ($(UNAME_S),Windows)
+	@echo "Running Windows installation script..."
+	@powershell -ExecutionPolicy Bypass -File install.ps1
+else
+	@echo "Running Linux/macOS installation script..."
+	@bash install.sh
+endif
+
+build:
+ifeq ($(UNAME_S),Windows)
+	@echo "[INFO] Building for Windows..."
+	@go build -o pjsw.exe main.go
+	@echo "[INFO] Build complete: pjsw.exe"
+else
+	@echo "[INFO] Building for Linux/macOS..."
+	@go build -o pjsw main.go
+	@echo "[INFO] Build complete: pjsw"
+endif
+
+clean:
+	@echo "[INFO] Cleaning build artifacts..."
+ifeq ($(UNAME_S),Windows)
+	@if exist pjsw.exe del pjsw.exe
+else
+	@rm -f pjsw
+endif
+	@echo "[INFO] Clean complete"
+
+help:
+	@echo "pjsw Makefile"
+	@echo ""
+	@echo "Available targets:"
+	@echo "  make install  - Install pjsw (runs platform-specific script)"
+	@echo "  make build    - Build pjsw binary only"
+	@echo "  make clean    - Remove build artifacts"
+	@echo "  make help     - Show this help message"
